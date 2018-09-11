@@ -188,4 +188,12 @@ class LineToTwoView (ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : LineToTwoView {
+            val view : LineToTwoView = LineToTwoView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
