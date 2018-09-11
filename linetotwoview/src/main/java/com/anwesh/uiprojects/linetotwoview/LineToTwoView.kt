@@ -165,4 +165,25 @@ class LineToTwoView (ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : LineToTwoView) {
+        private val ltt : LinkedLineToTwo = LinkedLineToTwo(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            ltt.draw(canvas, paint)
+            animator.animate {
+                ltt.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            ltt.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
