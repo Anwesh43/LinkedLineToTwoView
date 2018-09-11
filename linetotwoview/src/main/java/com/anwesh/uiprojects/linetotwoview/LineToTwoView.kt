@@ -16,7 +16,7 @@ val nodes : Int = 5
 
 fun Canvas.drawLTTNode(i : Int, scale : Float, paint : Paint) {
     val sc1 : Float = Math.min(0.5f, scale) * 2
-    val sc2 : Float = Math.min(0.5f, scale - 0.5f) * 2
+    val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val gap : Float = h / (nodes + 1)
@@ -28,10 +28,10 @@ fun Canvas.drawLTTNode(i : Int, scale : Float, paint : Paint) {
     rotate(90f * sc1)
     for (j in 0..1) {
         val sf : Float = 1f - 2 * (j % 2)
-        val y : Float = -gap + i * gap
+        val y : Float = -gap/2 + j * gap/2
         save()
-        translate((w/2 - gap) * sf, 0f)
-        drawLine(0f, y, 0f, y + gap, paint)
+        translate(0f, -(w/2 - gap/2) * sc2 * sf)
+        drawLine(0f, y, 0f, y + gap/2, paint)
         restore()
     }
     restore()
@@ -147,11 +147,12 @@ class LineToTwoView (ctx : Context) : View(ctx) {
     }
 
     data class LinkedLineToTwo(var i : Int) {
-        private var curr : LTTNode = LTTNode(0)
+        private var root : LTTNode = LTTNode(0)
+        private var curr : LTTNode = root
         private var dir : Int = 1
 
         fun draw(canvas : Canvas, paint : Paint) {
-            curr.draw(canvas, paint)
+            root.draw(canvas, paint)
         }
 
         fun update(cb : (Int, Float) -> Unit) {
