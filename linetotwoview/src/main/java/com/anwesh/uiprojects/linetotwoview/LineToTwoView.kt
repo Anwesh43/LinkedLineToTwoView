@@ -10,8 +10,32 @@ import android.content.Context
 import android.app.Activity
 import android.graphics.Paint
 import android.graphics.Canvas
+import android.graphics.Color
 
 val nodes : Int = 5
+
+fun Canvas.drawLTTNode(i : Int, scale : Float, paint : Paint) {
+    val sc1 : Float = Math.min(0.5f, scale) * 2
+    val sc2 : Float = Math.min(0.5f, scale - 0.5f) * 2
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    paint.strokeWidth = Math.min(w, h) / 60
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = Color.parseColor("#283593")
+    save()
+    translate(w/2, gap + i * gap)
+    rotate(90f * sc1)
+    for (j in 0..1) {
+        val sf : Float = 1f - 2 * (j % 2)
+        val y : Float = -gap + i * gap
+        save()
+        translate((w/2 - gap) * sf, 0f)
+        drawLine(0f, y, 0f, y + gap, paint)
+        restore()
+    }
+    restore()
+}
 
 class LineToTwoView (ctx : Context) : View(ctx) {
 
